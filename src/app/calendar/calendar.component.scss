@@ -1,0 +1,78 @@
+.calendar-container {
+  margin: auto;
+  width: 100%;
+  font-family: "Roboto", sans-serif;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #3498db;
+  color: white;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: minmax(50px, auto);
+  text-align: center;
+}
+
+.week-day {
+  border: 1px solid #ddd;
+  padding: 1rem;
+  font-weight: bold;
+  pointer-events: none;
+  transition: background-color 0.3s ease;
+}
+
+.calendar-day {
+  position: relative;
+  border: 1px solid #ddd;
+  padding: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #3498db;
+    color: white;
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+.appointment-entry {
+  top: 1rem;
+  left: 0;
+  right: 0;
+  background-color: #f39c12;
+  padding: 0.5rem;
+  margin-top: 0.2rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.5rem;
+  height: 0.5rem;
+
+  &:hover {
+    background-color: #e74c3c;
+    color: white;
+  }
+}
+
+.empty-day {
+  background-color: #f0f0f0;
+}

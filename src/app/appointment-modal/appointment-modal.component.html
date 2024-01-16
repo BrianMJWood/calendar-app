@@ -1,0 +1,54 @@
+<div
+  class="modal-overlay"
+  *ngIf="selectedDate"
+  (click)="closeModalTrigger()"
+></div>
+<div class="modal">
+  <div class="modal-content" [formGroup]="appointmentForm">
+    <span class="close" (click)="closeModalTrigger()">&times;</span>
+    <h2>
+      {{ appointment ? "Edit " : "Add " }}Appointment for
+      {{ appointmentForm.value.date | date : "longDate" }}
+    </h2>
+    <div class="form-input">
+      Title:
+      <input type="text" formControlName="title" />
+      Start time:
+      <input
+        type="time"
+        formControlName="startTime"
+        placeholder="Start Time"
+        (blur)="validateTime()"
+      />
+      End time:
+      <input
+        type="time"
+        formControlName="endTime"
+        placeholder="End Time"
+        (blur)="validateTime()"
+      />
+      <div *ngIf="!isOutsideGMT" class="invalid-time">
+        Time must be between 8am and 5pm GMT.
+      </div>
+      <div *ngIf="!isValidTime" class="invalid-time">
+        End time must be after start time.
+      </div>
+      <div *ngIf="hasOverlap" class="invalid-time">
+        Appointment already exists for this timeslot.
+      </div>
+      Description:
+      <textarea formControlName="description"></textarea>
+    </div>
+    <button
+      [disabled]="
+        !appointmentForm.valid || !isValidTime || hasOverlap || !isOutsideGMT
+      "
+      (click)="submitAppointment()"
+    >
+      {{ appointment ? "Update" : "Add" }} Appointment
+    </button>
+    <button *ngIf="appointment" (click)="deleteAppointmentTrigger()">
+      Delete Appointment
+    </button>
+  </div>
+</div>

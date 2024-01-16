@@ -1,0 +1,44 @@
+<div class="calendar-container mobile-calendar-view">
+  <div class="calendar-header">
+    <button (click)="changeMonth(-1)">&lt;</button>
+    <span>{{
+      currentYear + "-" + (currentMonth + 1) + "-01" | date : "MMMM yyyy"
+    }}</span>
+    <button (click)="changeMonth(1)">&gt;</button>
+  </div>
+  <div class="calendar-grid">
+    <div class="week-day" *ngFor="let day of daysOfWeek">{{ day }}</div>
+    <div class="calendar-day empty-day" *ngFor="let empty of emptyDays"></div>
+    <div
+      class="calendar-day day-content"
+      *ngFor="let day of daysInMonth"
+      [class.disabled]="dateIsInvalid(currentYear, currentMonth, day)"
+      (click)="openModal(currentYear, currentMonth, day)"
+    >
+      {{ day }}
+      <div
+        *ngFor="
+          let appointment of getAppointmentsForDate(
+            getDate(currentYear, currentMonth, day)
+          )
+        "
+        class="appointment-entry"
+        (click)="openModalForEdit(appointment)"
+      >
+        {{ appointment.title }} {{ appointment.startTime }}-{{
+          appointment.endTime
+        }}
+        {{ appointment.description }}
+      </div>
+    </div>
+  </div>
+</div>
+<app-appointment-modal
+  *ngIf="selectedDate"
+  [selectedDate]="selectedDate"
+  [appointment]="getEditingAppointment()"
+  [appointments]="appointments"
+  (addAppointment)="addOrEditAppointment($event)"
+  (deleteAppointment)="deleteAppointment($event)"
+  (closeModal)="closeModal()"
+></app-appointment-modal>
