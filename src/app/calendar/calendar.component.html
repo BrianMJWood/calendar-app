@@ -8,7 +8,9 @@
   </div>
   <div class="calendar-grid">
     <div class="week-day" *ngFor="let day of daysOfWeek">{{ day }}</div>
-    <div class="calendar-day empty-day" *ngFor="let empty of emptyDays"></div>
+    <div class="calendar-day empty-day" *ngFor="let empty of emptyDays">
+      {{ empty }}
+    </div>
     <div
       class="calendar-day day-content"
       *ngFor="let day of daysInMonth"

@@ -1,8 +1,4 @@
-<div
-  class="modal-overlay"
-  *ngIf="selectedDate"
-  (click)="closeModalTrigger()"
-></div>
+<div class="modal-overlay" (click)="closeModalTrigger()"></div>
 <div class="modal">
   <div class="modal-content" [formGroup]="appointmentForm">
     <span class="close" (click)="closeModalTrigger()">&times;</span>

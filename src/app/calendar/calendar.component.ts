@@ -8,9 +8,12 @@ import { Appointment } from 'src/models/appointment.model';
 })
 export class CalendarComponent implements OnInit {
   currentMonth!: number;
+  previousMonth!: number;
+  previousYear!: number;
   currentYear!: number;
   daysInMonth!: number[];
-  daysOfWeek: string[] = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  daysInPreviousMonth!: number[];
+  daysOfWeek: string[] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   emptyDays: number[] = [];
   appointments: Appointment[] = [];
   selectedDate: Date | null = null;
@@ -20,15 +23,30 @@ export class CalendarComponent implements OnInit {
 
   ngOnInit(): void {
     const currentDate = new Date();
-    this.currentMonth = currentDate.getMonth();
+    this.currentMonth = currentDate.getMonth() + 1;
+    this.previousMonth = this.currentMonth - 1;
+    this.previousYear = this.currentYear - 1;
     this.currentYear = currentDate.getFullYear();
     this.updateCalendar();
   }
 
   updateCalendar(): void {
     this.daysInMonth = this.getDaysInMonth(this.currentMonth, this.currentYear);
-    const firstDay = new Date(this.currentYear, this.currentMonth, 1).getDay();
-    this.emptyDays = Array(firstDay === 0 ? 6 : firstDay - 1).fill(null);
+    this.daysInPreviousMonth = this.getDaysInMonth(
+      this.previousMonth,
+      this.currentYear
+    );
+
+    // firstDay can determine whether the calendar starts at Sunday or Monday
+    const firstDay = new Date(this.currentYear, this.currentMonth, 2).getDay();
+
+    this.emptyDays = Array(firstDay === 0 ? 6 : firstDay - 1);
+
+    // The loop should iterate over this.emptyDays and for each empty day, pop a day from this.daysInPreviousMonth and push it into this.emptyDays
+    for (let i = 0; i < this.emptyDays.length; i++) {
+      this.emptyDays[i] = this.daysInPreviousMonth.pop() || 0;
+    }
+    this.emptyDays.reverse();
   }
 
   openModalForEdit(appointment: Appointment): void {
@@ -54,7 +72,7 @@ export class CalendarComponent implements OnInit {
   }
 
   getDaysInMonth(month: number, year: number): number[] {
-    const date = new Date(year, month, 1);
+    const date = new Date(year, month);
     const days = [];
     while (date.getMonth() === month) {
       days.push(new Date(date).getDate());
@@ -116,13 +134,17 @@ export class CalendarComponent implements OnInit {
 
   changeMonth(direction: number): void {
     this.currentMonth += direction;
+    this.previousMonth = this.previousMonth === 0 ? 11 : this.currentMonth - 1;
     if (this.currentMonth < 0) {
       this.currentYear--;
       this.currentMonth = 11;
+      this.previousMonth = 10;
     } else if (this.currentMonth > 11) {
       this.currentYear++;
       this.currentMonth = 0;
+      this.previousMonth = 11;
     }
+
     this.updateCalendar();
   }
 }
